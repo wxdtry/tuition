@@ -1,0 +1,83 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.school.tuition.dao.ClassesDao">
+
+    <resultMap type="com.school.tuition.entity.Classes" id="ClassesMap">
+        <result property="id" column="id" jdbcType="INTEGER"/>
+        <result property="className" column="class_name" jdbcType="VARCHAR"/>
+        <result property="classCode" column="class_code" jdbcType="VARCHAR"/>
+        <result property="gradeId" column="grade_id" jdbcType="INTEGER"/>
+        <result property="enable" column="enable" jdbcType="OTHER"/>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="ClassesMap">
+        select
+          id, class_name, class_code, grade_id, enable
+        from  classes
+        where id = #{id}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="ClassesMap">
+        select
+          id, class_name, class_code, grade_id, enable
+        from  classes
+        limit #{offset}, #{limit}
+    </select>
+
+    <!--通过实体作为筛选条件查询-->
+    <select id="queryAll" resultMap="ClassesMap">
+        select
+          id, class_name, class_code, grade_id, enable
+        from  classes
+        <where>
+            <if test="id != null">
+                and id = #{id}
+            </if>
+            <if test="className != null and className != ''">
+                and class_name = #{className}
+            </if>
+            <if test="classCode != null and classCode != ''">
+                and class_code = #{classCode}
+            </if>
+            <if test="gradeId != null">
+                and grade_id = #{gradeId}
+            </if>
+            <if test="enable != null">
+                and enable = #{enable}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="id" useGeneratedKeys="true">
+        insert into  classes(class_name, class_code, grade_id, enable)
+        values (#{className}, #{classCode}, #{gradeId}, #{enable})
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update  classes
+        <set>
+            <if test="className != null and className != ''">
+                class_name = #{className},
+            </if>
+            <if test="classCode != null and classCode != ''">
+                class_code = #{classCode},
+            </if>
+            <if test="gradeId != null">
+                grade_id = #{gradeId},
+            </if>
+            <if test="enable != null">
+                enable = #{enable},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete from  classes where id = #{id}
+    </delete>
+
+</mapper>
